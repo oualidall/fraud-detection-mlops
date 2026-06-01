@@ -1,10 +1,13 @@
+# PyTorch CPU-only (evite les ~4 GB de drivers NVIDIA inutiles sur CPU)
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 # Data & ML
 pandas==2.2.2
 numpy==1.26.4
 scikit-learn==1.4.2
 xgboost==2.0.3
 imbalanced-learn==0.12.3
-torch==2.3.0
+torch==2.3.0+cpu
 joblib==1.4.2
 
 # MLOps

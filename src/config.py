@@ -16,7 +16,14 @@ MODELS_DIR = PROJECT_ROOT / "models"
 class Settings(BaseSettings):
     """Runtime configuration sourced from environment variables (.env)."""
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+        # Allow fields prefixed "model_" (model_name, model_stage) without colliding
+        # with Pydantic 2's reserved namespace.
+        protected_namespaces=(),
+    )
 
     # Kaggle
     kaggle_username: str | None = None
