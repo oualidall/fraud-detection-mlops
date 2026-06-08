@@ -29,8 +29,10 @@ class Settings(BaseSettings):
     kaggle_username: str | None = None
     kaggle_key: str | None = None
 
-    # MLflow
-    mlflow_tracking_uri: str = "http://localhost:5000"
+    # MLflow. Defaults to a local file store so training works without a
+    # running server; Phase 4's docker-compose overrides this with the
+    # containerized tracking server URI.
+    mlflow_tracking_uri: str = "file:./mlruns"
     mlflow_experiment_name: str = "fraud-detection"
 
     # API

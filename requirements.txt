@@ -28,6 +28,8 @@ kaggle==1.6.14
 # Utils
 python-dotenv==1.0.1
 PyYAML==6.0.1
+# setuptools<81 still ships pkg_resources, which mlflow 2.13 imports at runtime.
+setuptools<81
 
 # Notebooks (EDA)
 jupyter==1.0.0

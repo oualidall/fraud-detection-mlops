@@ -95,12 +95,19 @@ Then:
 
 ## Results
 
-> _Updated as phases land._ The repo is currently at the end of **Phase 1 (setup + EDA)**. Modeling results will be added at the end of Phase 2.
+Validation set: most recent 118 108 transactions (temporal split), fraud rate 3.44 %.
+
+| Model | ROC-AUC | AUC-PR | best F1 | Recall @ P=90% |
+|---|---|---|---|---|
+| Logistic Regression (baseline) | 0.830 | 0.189 | 0.318 | 0.0 % |
+| **XGBoost** | **0.898** | **0.506** | **0.503** | **16.8 %** |
+
+XGBoost achieves **2.7× higher AUC-PR** than the linear baseline and is the only model able to reach 90 % precision (the logistic regression never gets there). All runs are tracked with MLflow.
 
 ## Project status
 
-- [x] **Phase 1** — Project scaffold, dataset ingestion, exploratory analysis
-- [ ] **Phase 2** — Modeling (XGBoost, Isolation Forest, Autoencoder) with MLflow tracking
+- [x] **Phase 1** — Project scaffold, memory-safe Parquet pipeline, exploratory analysis
+- [x] **Phase 2** — Feature engineering, XGBoost + baseline with MLflow tracking
 - [ ] **Phase 3** — FastAPI inference service + Dockerization
 - [ ] **Phase 4** — Monitoring stack (Prometheus + Grafana), Evidently drift reports, CI/CD
 
