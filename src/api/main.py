@@ -81,9 +81,13 @@ app = FastAPI(
 
 @app.get("/healthz", response_model=HealthResponse, tags=["ops"])
 async def healthz() -> HealthResponse:
-    """Liveness / readiness probe. Returns 200 when the model is loaded."""
+    """Liveness / readiness probe. Returns 200 when the model is loaded.
+
+    Calls ``load_model`` directly so that tests can patch
+    ``src.api.main.load_model`` without needing a real model file.
+    """
     try:
-        bundle = get_bundle()
+        bundle = load_model(settings.model_name)
         return HealthResponse(
             status="ok",
             model_loaded=True,

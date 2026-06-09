@@ -10,7 +10,7 @@ End-to-end MLOps pipeline for credit card fraud detection: from data ingestion t
 ![Docker](https://img.shields.io/badge/Docker-blue.svg)
 ![Evidently](https://img.shields.io/badge/Evidently-0.4-orange.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)
+![Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)
 
 ## Why this project
 
