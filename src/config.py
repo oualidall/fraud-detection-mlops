@@ -40,8 +40,8 @@ class Settings(BaseSettings):
     api_port: int = 8000
     log_level: str = "INFO"
 
-    # Model registry
-    model_name: str = "fraud_xgboost"
+    # Model registry (must match the name passed to --model in train.py)
+    model_name: str = "xgboost"
     model_stage: str = "Production"
 
     # Dataset (IEEE-CIS Fraud Detection on Kaggle)

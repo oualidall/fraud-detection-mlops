@@ -72,7 +72,12 @@ def train(
         MODELS_DIR.mkdir(parents=True, exist_ok=True)
         model_path = MODELS_DIR / f"{model_name}.joblib"
         joblib.dump(
-            {"model": model, "feature_names": dataset.feature_names},
+            {
+                "model": model,
+                "feature_names": dataset.feature_names,
+                "category_maps": dataset.category_maps,
+                "best_threshold": metrics["best_threshold"],
+            },
             model_path,
         )
         mlflow.log_artifact(str(model_path))

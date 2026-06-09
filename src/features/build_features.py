@@ -47,6 +47,7 @@ class Dataset:
     y_train: pd.Series
     y_val: pd.Series
     feature_names: list[str]
+    category_maps: dict[str, dict[str, int]]
 
     def summary(self) -> dict[str, float]:
         return {
@@ -129,11 +130,14 @@ def engineer(df: pd.DataFrame) -> pd.DataFrame:
     df["n_missing"] = df.isna().sum(axis=1).astype("int32")
 
     object_cols = df.select_dtypes(include=["object"]).columns
+    category_maps: dict[str, dict[str, int]] = {}
     for col in object_cols:
-        # category codes: distinct ints per category, -1 for NaN
-        df[col] = df[col].astype("category").cat.codes.astype("int32")
+        cat_series = df[col].astype("category")
+        # {category_value: integer_code} – NaN is always -1 (pandas default)
+        category_maps[col] = {v: i for i, v in enumerate(cat_series.cat.categories)}
+        df[col] = cat_series.cat.codes.astype("int32")
     logger.info("engineered features; label-encoded %s categorical cols", len(object_cols))
-    return df
+    return df, category_maps
 
 
 def build_dataset(val_fraction: float = 0.2, max_train_rows: int | None = None) -> Dataset:
@@ -145,7 +149,7 @@ def build_dataset(val_fraction: float = 0.2, max_train_rows: int | None = None) 
     runtime and memory bounded on small machines while preserving the temporal
     ordering (we train on the most recent history before the validation window).
     """
-    df = engineer(load_train_frame())
+    df, category_maps = engineer(load_train_frame())
 
     y = df[TARGET].astype("int8")
     X = df.drop(columns=[TARGET, ID_COLUMN])
@@ -161,6 +165,7 @@ def build_dataset(val_fraction: float = 0.2, max_train_rows: int | None = None) 
         y_train=y.iloc[train_start:cut],
         y_val=y.iloc[cut:],
         feature_names=list(X.columns),
+        category_maps=category_maps,
     )
     logger.info("dataset ready: %s", dataset.summary())
     return dataset

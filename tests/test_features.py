@@ -25,7 +25,7 @@ def _toy_frame(n: int = 200) -> pd.DataFrame:
 
 
 def test_engineer_adds_expected_features() -> None:
-    out = engineer(_toy_frame())
+    out, _ = engineer(_toy_frame())
     for col in ["TransactionAmt_log", "dt_hour", "dt_dow", "n_missing"]:
         assert col in out.columns
 
@@ -37,15 +37,18 @@ def test_engineer_adds_expected_features() -> None:
 
 
 def test_engineer_label_encodes_categoricals() -> None:
-    out = engineer(_toy_frame())
+    out, maps = engineer(_toy_frame())
     # object columns should now be integer codes (NaN -> -1)
     assert out["ProductCD"].dtype.kind in "iu"
     assert out["card4"].dtype.kind in "iu"
     assert (out["card4"] == -1).any()  # the None category becomes -1
+    # category_maps must contain the encoded columns
+    assert "ProductCD" in maps
+    assert "card4" in maps
 
 
 def test_engineer_is_sorted_by_time() -> None:
-    out = engineer(_toy_frame())
+    out, _ = engineer(_toy_frame())
     assert out["TransactionDT"].is_monotonic_increasing
 
 

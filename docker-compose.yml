@@ -1,0 +1,55 @@
+services:
+
+  # ── Fraud-detection inference API ──────────────────────────────────────────
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: fraud-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      # The trained model is kept outside the image so it can be updated
+      # without a rebuild. Run `python -m src.training.train` first.
+      - ../models:/app/models:ro
+    environment:
+      MODEL_NAME: xgboost
+      LOG_LEVEL: INFO
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+    depends_on:
+      - mlflow
+    networks:
+      - fraud_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # ── MLflow tracking server ──────────────────────────────────────────────────
+  mlflow:
+    image: python:3.12-slim
+    container_name: fraud-mlflow
+    restart: unless-stopped
+    command: >
+      bash -c "pip install --quiet mlflow==2.13.0 setuptools<81 &&
+               mlflow server
+               --host 0.0.0.0
+               --port 5000
+               --backend-store-uri /mlruns
+               --default-artifact-root /mlruns"
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlflow_data:/mlruns
+    networks:
+      - fraud_net
+
+networks:
+  fraud_net:
+    driver: bridge
+
+volumes:
+  mlflow_data:
