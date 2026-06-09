@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -60,7 +61,7 @@ class Dataset:
 
 
 def _select_columns(
-    parquet_path: "Path",
+    parquet_path: Path,
     max_missing_rate: float,
     always_keep: list[str],
 ) -> list[str]:
@@ -152,7 +153,7 @@ def build_dataset(val_fraction: float = 0.2, max_train_rows: int | None = None) 
     df, category_maps = engineer(load_train_frame())
 
     y = df[TARGET].astype("int8")
-    X = df.drop(columns=[TARGET, ID_COLUMN])
+    features = df.drop(columns=[TARGET, ID_COLUMN])  # noqa: N806 (X is ML convention)
 
     cut = int(len(df) * (1.0 - val_fraction))
     train_start = 0
@@ -160,11 +161,11 @@ def build_dataset(val_fraction: float = 0.2, max_train_rows: int | None = None) 
         train_start = cut - max_train_rows
 
     dataset = Dataset(
-        X_train=X.iloc[train_start:cut],
-        X_val=X.iloc[cut:],
+        X_train=features.iloc[train_start:cut],
+        X_val=features.iloc[cut:],
         y_train=y.iloc[train_start:cut],
         y_val=y.iloc[cut:],
-        feature_names=list(X.columns),
+        feature_names=list(features.columns),
         category_maps=category_maps,
     )
     logger.info("dataset ready: %s", dataset.summary())

@@ -3,12 +3,10 @@
 from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
-from contextlib import contextmanager
 
 import numpy as np
 import pytest
 from fastapi.testclient import TestClient
-
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -48,9 +46,8 @@ def client():
     bundle = _make_bundle()
     app.dependency_overrides[get_bundle] = lambda: bundle
 
-    with patch("src.api.main.load_model", return_value=bundle):
-        with TestClient(app, raise_server_exceptions=True) as c:
-            yield c
+    with patch("src.api.main.load_model", return_value=bundle), TestClient(app, raise_server_exceptions=True) as c:
+        yield c
 
     app.dependency_overrides.clear()
 

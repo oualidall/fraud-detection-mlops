@@ -2,13 +2,15 @@
 
 End-to-end MLOps pipeline for credit card fraud detection: from data ingestion to a containerized inference API with live monitoring and data drift detection.
 
-![Python](https://img.shields.io/badge/python-3.11-blue.svg)
-![PyTorch](https://img.shields.io/badge/PyTorch-2.3-ee4c2c.svg)
+[![CI](https://github.com/oualidall/fraud-detection-mlops/actions/workflows/ci.yml/badge.svg)](https://github.com/oualidall/fraud-detection-mlops/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/python-3.12-blue.svg)
 ![XGBoost](https://img.shields.io/badge/XGBoost-2.0-006400.svg)
 ![MLflow](https://img.shields.io/badge/MLflow-2.13-0194e2.svg)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688.svg)
 ![Docker](https://img.shields.io/badge/Docker-blue.svg)
+![Evidently](https://img.shields.io/badge/Evidently-0.4-orange.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)
 
 ## Why this project
 
@@ -106,10 +108,10 @@ XGBoost achieves **2.7× higher AUC-PR** than the linear baseline and is the onl
 
 ## Project status
 
-- [x] **Phase 1** — Project scaffold, memory-safe Parquet pipeline, exploratory analysis
-- [x] **Phase 2** — Feature engineering, XGBoost + baseline with MLflow tracking
-- [ ] **Phase 3** — FastAPI inference service + Dockerization
-- [ ] **Phase 4** — Monitoring stack (Prometheus + Grafana), Evidently drift reports, CI/CD
+- [x] **Phase 1** — Memory-safe Parquet pipeline, EDA notebook (182 days, 590k transactions)
+- [x] **Phase 2** — Feature engineering, XGBoost + baseline with MLflow experiment tracking
+- [x] **Phase 3** — FastAPI `/predict` service, Prometheus `/metrics`, Dockerfile, docker-compose
+- [x] **Phase 4** — GitHub Actions CI (lint + test), Evidently data drift report
 
 ## Repository layout
 
